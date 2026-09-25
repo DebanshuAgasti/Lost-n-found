@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:lostfound_db}?currentSchema=public&reWriteBatchedInserts=true
+    driverClassName: org.postgresql.Driver
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      pool-name: LostFoundHikariPool
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: public
+        jdbc:
+          batch_size: 25
+
+lostfound:
+  embedding:
+    mode: ${EMBEDDING_MODE:local}
+    remote-url: ${EMBEDDING_REMOTE_URL:}

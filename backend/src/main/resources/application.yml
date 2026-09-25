@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: lost-and-found-backend
+
+  profiles:
+    active: dev
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 25MB
+
+  jpa:
+    open-in-view: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+
+lostfound:
+  jwt:
+    secret: "lost-and-found-super-secure-secret-key-that-is-at-least-256-bits-long-for-jwt-signing!"
+    expiration-ms: 86400000 # 24 hours
+  storage:
+    upload-dir: ./uploads/images
+  embedding:
+    mode: local # 'local' or 'remote'
+    remote-url: ""
+  matching:
+    weight-visual: 0.35
+    weight-category: 0.20
+    weight-attributes: 0.20
+    weight-text: 0.10
+    weight-location: 0.10
+    weight-temporal: 0.05
+    min-candidate-score: 0.40
+    max-proximity-km: 25.0

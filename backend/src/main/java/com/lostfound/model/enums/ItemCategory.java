@@ -1,0 +1,15 @@
+package com.lostfound.model.enums;
+
+public enum ItemCategory {
+    ELECTRONICS,
+    WALLET_AND_PURSE,
+    KEYS,
+    DOCUMENTS_AND_ID,
+    JEWELRY_AND_WATCHES,
+    BAGS_AND_BACKPACKS,
+    CLOTHING_AND_ACCESSORIES,
+    PETS,
+    BOOKS_AND_STATIONERY,
+    SPORTS_EQUIPMENT,
+    OTHER
+}
