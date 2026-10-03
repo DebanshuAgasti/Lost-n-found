@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LostRadar AI — Found & Secured Items</title>
+  <meta name="description" content="Browse recovered and secured items held safely by custodians and security.">
+  <link rel="stylesheet" href="./index.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%200%22%20100%22%20100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body data-page="found">
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <a href="./index.html" class="brand">
+      <div class="brand-icon">⚡</div>
+      <span>Lost<span class="text-gradient">Radar</span></span>
+    </a>
+
+    <!-- Multi-Page Navigation Links -->
+    <nav class="nav-links" id="main-nav">
+      <a href="./index.html" class="nav-btn">
+        <span>📊</span> Dashboard
+      </a>
+      <a href="./lost.html" class="nav-btn">
+        <span>🔍</span> Lost Feed
+      </a>
+      <a href="./found.html" class="nav-btn active">
+        <span>📦</span> Found Feed
+      </a>
+      <a href="./matches.html" class="nav-btn">
+        <span>🎯</span> Match Radar
+      </a>
+      <a href="./claims.html" class="nav-btn">
+        <span>📑</span> Claims
+      </a>
+      <a href="./ai-hub.html" class="nav-btn">
+        <span>🤖</span> AI Hub
+      </a>
+    </nav>
+
+    <!-- Nav Actions -->
+    <div class="nav-actions">
+      <div id="backend-status-pill" class="auth-persona-pill" title="API Status">
+        <span id="backend-status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981;"></span>
+        <span id="backend-status-text" style="font-size:0.75rem; color:#94a3b8;">Online</span>
+      </div>
+
+      <div class="auth-persona-pill" id="persona-pill" title="Click to toggle user persona">
+        <div class="user-avatar" id="nav-avatar">AM</div>
+        <span id="nav-user-name">Alex Mercer</span>
+        <span style="font-size:0.65rem; color:#64748b;">▼</span>
+      </div>
+
+      <button class="notif-btn" id="notif-bell-btn" title="Notifications">
+        <span>🔔</span>
+        <span class="notif-badge" id="notif-counter">2</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notifications Dropdown Popover -->
+  <div id="notif-popover" style="display:none; position:fixed; top:70px; right:2rem; width:340px; background:var(--bg-secondary); border:1px solid var(--border-bright); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); z-index:150; padding:1.2rem; backdrop-filter:blur(16px);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.5rem;">
+      <h4 style="font-size:0.95rem;">Notifications</h4>
+      <button id="clear-notifs-btn" class="btn btn-sm btn-secondary" style="font-size:0.72rem; padding:0.2rem 0.5rem;">Mark all read</button>
+    </div>
+    <div id="notifs-list" style="display:flex; flex-direction:column; gap:0.65rem; max-height:280px; overflow-y:auto;"></div>
+  </div>
+
+  <!-- Persona Switcher Dropdown Menu -->
+  <div id="persona-menu" style="display:none; position:fixed; top:70px; right:7rem; width:260px; background:var(--bg-secondary); border:1px solid var(--border-bright); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); z-index:150; padding:0.8rem; backdrop-filter:blur(16px);">
+    <div style="font-size:0.75rem; color:var(--text-muted); padding:0.3rem 0.5rem; text-transform:uppercase; letter-spacing:0.05em;">Switch Persona</div>
+    <div id="persona-list" style="display:flex; flex-direction:column; gap:0.3rem; margin-top:0.4rem;"></div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="container">
+    <section class="view-section active">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h2 style="font-size:1.8rem; margin-bottom:0.25rem;">Found & Secured Items</h2>
+          <p style="font-size:0.88rem; color:var(--text-secondary);">Items safely held at library desks, student centers, and security lockups.</p>
+        </div>
+        <button class="btn btn-emerald" id="btn-open-report-found">
+          <span>+</span> Report Found Item
+        </button>
+      </div>
+
+      <!-- Filters & Search Bar -->
+      <div class="filter-bar">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="found-search-input" placeholder="Search found items, custody location, or details...">
+        </div>
+        <div class="pill-filters" id="found-category-pills">
+          <button class="filter-pill active" data-category="ALL">All Categories</button>
+          <button class="filter-pill" data-category="ELECTRONICS">Electronics</button>
+          <button class="filter-pill" data-category="WALLET_AND_PURSE">Wallets</button>
+          <button class="filter-pill" data-category="BAGS_AND_BACKPACKS">Bags</button>
+          <button class="filter-pill" data-category="DOCUMENTS_AND_ID">ID & Keys</button>
+          <button class="filter-pill" data-category="OTHER">Other</button>
+        </div>
+      </div>
+
+      <!-- Found Items Grid -->
+      <div class="item-grid" id="found-items-grid"></div>
+    </section>
+  </main>
+
+  <!-- Modal: Report Found Item -->
+  <div class="modal-overlay" id="modal-report-found">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size:1.3rem; display:flex; align-items:center; gap:0.5rem;">
+          <span>📦</span> Report Found Item
+        </h3>
+        <button class="modal-close" data-close-modal="modal-report-found">✕</button>
+      </div>
+
+      <form id="form-report-found">
+        <div class="form-group">
+          <label class="form-label">Item Title *</label>
+          <input type="text" id="found-form-title" class="form-control" placeholder="e.g. Dark Titanium Phone Found at Library" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select id="found-form-category" class="form-control" required>
+              <option value="ELECTRONICS">Electronics</option>
+              <option value="WALLET_AND_PURSE">Wallet & Purse</option>
+              <option value="BAGS_AND_BACKPACKS">Bags & Backpacks</option>
+              <option value="DOCUMENTS_AND_ID">Documents & ID</option>
+              <option value="KEYS">Keys</option>
+              <option value="CLOTHING">Clothing</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Custodian Name *</label>
+            <input type="text" id="found-form-custodian" class="form-control" value="Sarah Chen (Library Desk)" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Public Description *</label>
+          <textarea id="found-form-description" class="form-control" placeholder="Describe the item generally. Avoid revealing secret details needed to verify ownership!" required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Found Date *</label>
+            <input type="date" id="found-form-date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Found Time</label>
+            <input type="time" id="found-form-time" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Discovery Location *</label>
+            <input type="text" id="found-form-location" class="form-control" placeholder="e.g. Study Cubicle #14" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Secure Storage Location *</label>
+            <input type="text" id="found-form-storage" class="form-control" placeholder="e.g. Safe Box B-4" required>
+          </div>
+        </div>
+
+        <div style="background:rgba(99,102,241,0.1); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-glow); margin-bottom:1.25rem;">
+          <h4 style="font-size:0.85rem; color:#c7d2fe; margin-bottom:0.4rem;">🔐 Secret Ownership Challenge Question</h4>
+          <p style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:0.6rem;">Ask a question only the true owner can answer (e.g. wallpaper picture, engravings, contents).</p>
+          <input type="text" id="found-form-verification-question" class="form-control" placeholder="e.g. What sticker is on the back or what initials are inside?" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Photo Image URL</label>
+          <input type="url" id="found-form-image" class="form-control" placeholder="https://images.unsplash.com/...">
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+          <button type="button" class="btn btn-secondary" data-close-modal="modal-report-found">Cancel</button>
+          <button type="submit" class="btn btn-emerald">Register Found Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Submit Claim -->
+  <div class="modal-overlay" id="modal-submit-claim">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size:1.3rem; display:flex; align-items:center; gap:0.5rem;">
+          <span>📑</span> File Ownership Claim
+        </h3>
+        <button class="modal-close" data-close-modal="modal-submit-claim">✕</button>
+      </div>
+
+      <form id="form-submit-claim">
+        <input type="hidden" id="claim-form-found-id">
+        <input type="hidden" id="claim-form-lost-id">
+
+        <div style="margin-bottom:1rem; background:rgba(8,12,21,0.5); padding:0.9rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle);">
+          <div style="font-size:0.8rem; color:var(--text-muted);">Claiming item:</div>
+          <div id="claim-modal-item-title" style="font-weight:700; font-size:1.05rem;">Item</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Challenge Question from Finder:</label>
+          <div id="claim-modal-question" style="font-size:0.9rem; color:#a5b4fc; padding:0.6rem; background:rgba(99,102,241,0.1); border-radius:var(--radius-sm); border:1px solid var(--border-glow); margin-bottom:0.75rem;">
+            Question
+          </div>
+          <label class="form-label">Your Answer *</label>
+          <textarea id="claim-form-answers" class="form-control" placeholder="Provide exact, unambiguous answers to the challenge question..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Additional Proof of Ownership</label>
+          <textarea id="claim-form-proof" class="form-control" placeholder="Mention serial numbers, receipts, unique markings, or lockscreen credentials..."></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+          <button type="button" class="btn btn-secondary" data-close-modal="modal-submit-claim">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit for AI Verification</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Main App Script -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

@@ -43,6 +43,9 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for H2 console
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // Public static frontend assets
+                        .requestMatchers("/", "/index.html", "/*.html", "/*.css", "/*.js", "/*.json", "/favicon.ico", "/static/**").permitAll()
+
                         // Public Auth & Docs
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
@@ -53,6 +56,9 @@ public class SecurityConfig {
                         // Public browsing of lost and found listings
                         .requestMatchers(HttpMethod.GET, "/api/lost-items/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/found-items/**").permitAll()
+
+                        // AI Utility endpoints (Attribute extraction & natural language parsing)
+                        .requestMatchers("/api/ai/parse-report", "/api/ai/extract-attributes").permitAll()
 
                         // Everything else requires authentication
                         .anyRequest().authenticated()

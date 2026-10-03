@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LostRadar AI — Lost Items Feed</title>
+  <meta name="description" content="Browse active missing and lost items across campus.">
+  <link rel="stylesheet" href="./index.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%200%22%20100%22%20100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body data-page="lost">
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <a href="./index.html" class="brand">
+      <div class="brand-icon">⚡</div>
+      <span>Lost<span class="text-gradient">Radar</span></span>
+    </a>
+
+    <!-- Multi-Page Navigation Links -->
+    <nav class="nav-links" id="main-nav">
+      <a href="./index.html" class="nav-btn">
+        <span>📊</span> Dashboard
+      </a>
+      <a href="./lost.html" class="nav-btn active">
+        <span>🔍</span> Lost Feed
+      </a>
+      <a href="./found.html" class="nav-btn">
+        <span>📦</span> Found Feed
+      </a>
+      <a href="./matches.html" class="nav-btn">
+        <span>🎯</span> Match Radar
+      </a>
+      <a href="./claims.html" class="nav-btn">
+        <span>📑</span> Claims
+      </a>
+      <a href="./ai-hub.html" class="nav-btn">
+        <span>🤖</span> AI Hub
+      </a>
+    </nav>
+
+    <!-- Nav Actions -->
+    <div class="nav-actions">
+      <div id="backend-status-pill" class="auth-persona-pill" title="API Status">
+        <span id="backend-status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981;"></span>
+        <span id="backend-status-text" style="font-size:0.75rem; color:#94a3b8;">Online</span>
+      </div>
+
+      <div class="auth-persona-pill" id="persona-pill" title="Click to toggle user persona">
+        <div class="user-avatar" id="nav-avatar">AM</div>
+        <span id="nav-user-name">Alex Mercer</span>
+        <span style="font-size:0.65rem; color:#64748b;">▼</span>
+      </div>
+
+      <button class="notif-btn" id="notif-bell-btn" title="Notifications">
+        <span>🔔</span>
+        <span class="notif-badge" id="notif-counter">2</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notifications Dropdown Popover -->
+  <div id="notif-popover" style="display:none; position:fixed; top:70px; right:2rem; width:340px; background:var(--bg-secondary); border:1px solid var(--border-bright); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); z-index:150; padding:1.2rem; backdrop-filter:blur(16px);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.5rem;">
+      <h4 style="font-size:0.95rem;">Notifications</h4>
+      <button id="clear-notifs-btn" class="btn btn-sm btn-secondary" style="font-size:0.72rem; padding:0.2rem 0.5rem;">Mark all read</button>
+    </div>
+    <div id="notifs-list" style="display:flex; flex-direction:column; gap:0.65rem; max-height:280px; overflow-y:auto;"></div>
+  </div>
+
+  <!-- Persona Switcher Dropdown Menu -->
+  <div id="persona-menu" style="display:none; position:fixed; top:70px; right:7rem; width:260px; background:var(--bg-secondary); border:1px solid var(--border-bright); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); z-index:150; padding:0.8rem; backdrop-filter:blur(16px);">
+    <div style="font-size:0.75rem; color:var(--text-muted); padding:0.3rem 0.5rem; text-transform:uppercase; letter-spacing:0.05em;">Switch Persona</div>
+    <div id="persona-list" style="display:flex; flex-direction:column; gap:0.3rem; margin-top:0.4rem;"></div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="container">
+    <section class="view-section active">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h2 style="font-size:1.8rem; margin-bottom:0.25rem;">Lost Items Feed</h2>
+          <p style="font-size:0.88rem; color:var(--text-secondary);">Browse active missing items reported by students, faculty, and campus guests.</p>
+        </div>
+        <button class="btn btn-primary" id="btn-open-report-lost">
+          <span>+</span> Report Lost Item
+        </button>
+      </div>
+
+      <!-- Filters & Search Bar -->
+      <div class="filter-bar">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="lost-search-input" placeholder="Search by brand, item title, marks, or location...">
+        </div>
+        <div class="pill-filters" id="lost-category-pills">
+          <button class="filter-pill active" data-category="ALL">All Categories</button>
+          <button class="filter-pill" data-category="ELECTRONICS">Electronics</button>
+          <button class="filter-pill" data-category="WALLET_AND_PURSE">Wallets</button>
+          <button class="filter-pill" data-category="BAGS_AND_BACKPACKS">Bags</button>
+          <button class="filter-pill" data-category="DOCUMENTS_AND_ID">ID & Keys</button>
+          <button class="filter-pill" data-category="OTHER">Other</button>
+        </div>
+      </div>
+
+      <!-- Lost Items Grid -->
+      <div class="item-grid" id="lost-items-grid"></div>
+    </section>
+  </main>
+
+  <!-- Modal: Report Lost Item -->
+  <div class="modal-overlay" id="modal-report-lost">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size:1.3rem; display:flex; align-items:center; gap:0.5rem;">
+          <span>🚨</span> Report Lost Item
+        </h3>
+        <button class="modal-close" data-close-modal="modal-report-lost">✕</button>
+      </div>
+
+      <form id="form-report-lost">
+        <div class="form-group">
+          <label class="form-label">Item Title *</label>
+          <input type="text" id="lost-form-title" class="form-control" placeholder="e.g. Space Gray Apple iPhone 15 Pro" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select id="lost-form-category" class="form-control" required>
+              <option value="ELECTRONICS">Electronics</option>
+              <option value="WALLET_AND_PURSE">Wallet & Purse</option>
+              <option value="BAGS_AND_BACKPACKS">Bags & Backpacks</option>
+              <option value="DOCUMENTS_AND_ID">Documents & ID</option>
+              <option value="KEYS">Keys</option>
+              <option value="CLOTHING">Clothing</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reward Amount ($)</label>
+            <input type="number" id="lost-form-reward" class="form-control" placeholder="0.00" min="0" step="5">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description *</label>
+          <textarea id="lost-form-description" class="form-control" placeholder="Describe the item, what was inside, and where it was misplaced..." required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Lost Date *</label>
+            <input type="date" id="lost-form-date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lost Time</label>
+            <input type="time" id="lost-form-time" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Location / Building *</label>
+            <input type="text" id="lost-form-location" class="form-control" placeholder="e.g. Central Library 2nd Floor" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">City *</label>
+            <input type="text" id="lost-form-city" class="form-control" value="San Jose" required>
+          </div>
+        </div>
+
+        <div style="background:rgba(8,12,21,0.5); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle); margin-bottom:1.25rem;">
+          <h4 style="font-size:0.85rem; color:#cbd5e1; margin-bottom:0.75rem;">Physical Distinctive Attributes</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Brand</label>
+              <input type="text" id="lost-form-brand" class="form-control" placeholder="Apple, Fossil, Sony...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Model</label>
+              <input type="text" id="lost-form-model" class="form-control" placeholder="iPhone 15 Pro, Bifold...">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Primary Color</label>
+              <input type="text" id="lost-form-color" class="form-control" placeholder="Space Gray, Brown, Blue...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Distinctive Marks / Stickers</label>
+              <input type="text" id="lost-form-marks" class="form-control" placeholder="Stickers, scratches, initials...">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Photo Image URL</label>
+          <input type="url" id="lost-form-image" class="form-control" placeholder="https://images.unsplash.com/...">
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+          <button type="button" class="btn btn-secondary" data-close-modal="modal-report-lost">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Lost Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Main App Script -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LostRadar AI — Custody & Claims</title>
+  <meta name="description" content="Review ownership claims backed by AI challenge answer verification.">
+  <link rel="stylesheet" href="./index.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%200%22%20100%22%20100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body data-page="claims">
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <a href="./index.html" class="brand">
+      <div class="brand-icon">⚡</div>
+      <span>Lost<span class="text-gradient">Radar</span></span>
+    </a>
+
+    <!-- Multi-Page Navigation Links -->
+    <nav class="nav-links" id="main-nav">
+      <a href="./index.html" class="nav-btn">
+        <span>📊</span> Dashboard
+      </a>
+      <a href="./lost.html" class="nav-btn">
+        <span>🔍</span> Lost Feed
+      </a>
+      <a href="./found.html" class="nav-btn">
+        <span>📦</span> Found Feed
+      </a>
+      <a href="./matches.html" class="nav-btn">
+        <span>🎯</span> Match Radar
+      </a>
+      <a href="./claims.html" class="nav-btn active">
+        <span>📑</span> Claims
+      </a>
+      <a href="./ai-hub.html" class="nav-btn">
+        <span>🤖</span> AI Hub
+      </a>
+    </nav>
+
+    <!-- Nav Actions -->
+    <div class="nav-actions">
+      <div id="backend-status-pill" class="auth-persona-pill" title="API Status">
+        <span id="backend-status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981;"></span>
+        <span id="backend-status-text" style="font-size:0.75rem; color:#94a3b8;">Online</span>
+      </div>
+
+      <div class="auth-persona-pill" id="persona-pill" title="Click to toggle user persona">
+        <div class="user-avatar" id="nav-avatar">AM</div>
+        <span id="nav-user-name">Alex Mercer</span>
+        <span style="font-size:0.65rem; color:#64748b;">▼</span>
+      </div>
+
+      <button class="notif-btn" id="notif-bell-btn" title="Notifications">
+        <span>🔔</span>
+        <span class="notif-badge" id="notif-counter">2</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notifications Dropdown Popover -->
+  <div id="notif-popover" style="display:none; position:fixed; top:70px; right:2rem; width:340px; background:var(--bg-secondary); border:1px solid var(--border-bright); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); z-index:150; padding:1.2rem; backdrop-filter:blur(16px);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.5rem;">
+      <h4 style="font-size:0.95rem;">Notifications</h4>
+      <button id="clear-notifs-btn" class="btn btn-sm btn-secondary" style="font-size:0.72rem; padding:0.2rem 0.5rem;">Mark all read</button>
+    </div>
+    <div id="notifs-list" style="display:flex; flex-direction:column; gap:0.65rem; max-height:280px; overflow-y:auto;"></div>
+  </div>
+
+  <!-- Persona Switcher Dropdown Menu -->
+  <div id="persona-menu" style="display:none; position:fixed; top:70px; right:7rem; width:260px; background:var(--bg-secondary); border:1px solid var(--border-bright); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); z-index:150; padding:0.8rem; backdrop-filter:blur(16px);">
+    <div style="font-size:0.75rem; color:var(--text-muted); padding:0.3rem 0.5rem; text-transform:uppercase; letter-spacing:0.05em;">Switch Persona</div>
+    <div id="persona-list" style="display:flex; flex-direction:column; gap:0.3rem; margin-top:0.4rem;"></div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="container">
+    <section class="view-section active">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.75rem; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h2 style="font-size:1.8rem; margin-bottom:0.25rem;">Custody & Claim Verification</h2>
+          <p style="font-size:0.88rem; color:var(--text-secondary);">Review ownership claims backed by AI challenge answer verification and custodian release controls.</p>
+        </div>
+      </div>
+
+      <!-- Claims List -->
+      <div id="claims-container" style="display:flex; flex-direction:column; gap:1.25rem;"></div>
+    </section>
+  </main>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Main App Script -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

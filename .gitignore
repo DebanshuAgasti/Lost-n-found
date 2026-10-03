@@ -35,3 +35,17 @@ target/
 uploads/
 *.db
 planning/L&F_project_export.zip
+
+### Node / Frontend ###
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.env.local
+.env.*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+### External / Scratch ###
+zenith_repo/
