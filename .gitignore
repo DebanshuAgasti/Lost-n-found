@@ -2,8 +2,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-planning
-docs
+
 
 ### STS ###
 .apt_generated
@@ -35,3 +34,4 @@ docs
 ### Uploads & DB ###
 uploads/
 *.db
+planning/L&F_project_export.zip
