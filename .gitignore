@@ -49,3 +49,5 @@ yarn-error.log*
 
 ### External / Scratch ###
 zenith_repo/
+*.log
+*.ps1

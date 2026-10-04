@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { AppProvider } from '../context/AppContext.jsx';
+import { api } from '../api.js';
 import AiHubPage from '../pages/AiHubPage.jsx';
 
 describe('AiHubPage Component', () => {
