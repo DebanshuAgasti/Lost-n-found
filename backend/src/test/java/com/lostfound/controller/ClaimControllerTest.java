@@ -20,8 +20,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -126,7 +126,7 @@ class ClaimControllerTest {
                 "Engraving and receipt verified in person. Item released."
         );
 
-        mockMvc.perform(put("/api/claims/" + claimId + "/review")
+        mockMvc.perform(patch("/api/claims/" + claimId + "/review")
                         .header("Authorization", "Bearer " + finderToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reviewReq)))

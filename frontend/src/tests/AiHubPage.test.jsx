@@ -52,6 +52,6 @@ describe('AiHubPage Component', () => {
     await waitFor(() => {
       expect(screen.getByText(/Analysis Complete \(94% Confidence\)/i)).toBeInTheDocument();
     });
-    expect(screen.getByText(/Apple/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Apple/i)[0]).toBeInTheDocument();
   });
 });
