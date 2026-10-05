@@ -78,11 +78,21 @@ export default function AiHubPage() {
 
   return (
     <section className="view-section active">
-      <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-        <div className="hero-pill">🤖 Pluggable LLM & Vision Service (Gemini / OpenAI / Ollama)</div>
-        <h2 style={{ fontSize: '2.2rem', marginBottom: '0.4rem' }}>AI Intelligence Hub</h2>
+      {/* Editorial Header */}
+      <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
+          <span className="hero-pill" style={{ marginBottom: 0 }}>
+            <span>●</span> UNIVERSAL PLUGGABLE AI GATEWAY
+          </span>
+          <span className="handwritten-annotation" style={{ fontSize: '1rem', color: 'var(--accent-primary)' }}>
+            Gemini 1.5 Flash + Local Ollama fallback
+          </span>
+        </div>
+        <h2 style={{ fontSize: '2.4rem', fontFamily: 'var(--font-heading)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>
+          AI Intelligence Hub
+        </h2>
         <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', maxWidth: '640px', margin: '0 auto' }}>
-          Experience how our backend extracts attributes from item photos, parses freeform conversational reports into structured JSON, and explains match confidence.
+          Interactive workbench to extract multimodal attributes from physical item photographs and parse natural language conversational reports into structured JSON entities.
         </p>
       </div>
 
@@ -90,21 +100,25 @@ export default function AiHubPage() {
         {/* Tool 1: Vision Attribute Extractor */}
         <div className="ai-panel">
           <div className="ai-panel-header">
-            <div className="ai-panel-icon" style={{ color: 'var(--accent-purple)' }}>📸</div>
+            <div className="ai-panel-icon" style={{ background: 'rgba(212, 249, 51, 0.1)', color: 'var(--accent-primary)', border: '1px solid var(--border-color)' }}>
+              📸
+            </div>
             <div>
-              <h3 style={{ fontSize: '1.15rem' }}>Vision Attribute Extractor</h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                Upload an item photo to detect brand, model, colors, stickers & damage.
+              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+                Vision Attribute Extractor
+              </h3>
+              <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
+                Upload an item photo to detect brand, model, colors, distinctive stickers & damage.
               </p>
             </div>
           </div>
 
           <div className="upload-dropzone" onClick={() => fileInputRef.current?.click()}>
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📷</div>
-            <p style={{ fontWeight: 600, fontSize: '0.92rem', marginBottom: '0.2rem' }}>
+            <div style={{ fontSize: '2.2rem', marginBottom: '0.4rem' }}>📷</div>
+            <p style={{ fontWeight: 700, fontSize: '0.92rem', marginBottom: '0.2rem' }}>
               Drop photo here or click to browse
             </p>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
               Supports PNG, JPG, WebP up to 10MB
             </p>
             <input
@@ -120,9 +134,9 @@ export default function AiHubPage() {
           </div>
 
           {/* Quick Presets */}
-          <div style={{ marginBottom: '1rem' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.4rem' }}>
-              Or test with sample items:
+          <div style={{ marginBottom: '1.25rem' }}>
+            <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}>
+              QUICK TEST PRESETS:
             </span>
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button className="btn btn-sm btn-secondary" onClick={() => handlePreset('iphone')}>
@@ -132,29 +146,37 @@ export default function AiHubPage() {
                 👛 Vintage Wallet
               </button>
               <button className="btn btn-sm btn-secondary" onClick={() => handlePreset('bottle')}>
-                🍶 Water Bottle
+                🍶 Hydro Flask
               </button>
             </div>
           </div>
 
-          <button className="btn btn-primary" style={{ width: '100%' }} onClick={handleRunVision} disabled={isVisionLoading}>
+          <button
+            className="btn btn-primary"
+            style={{ width: '100%', justifyContent: 'center' }}
+            onClick={handleRunVision}
+            disabled={isVisionLoading}
+          >
             <span>⚡</span> {isVisionLoading ? 'Extracting with Gemini...' : 'Run Gemini Vision Analysis'}
           </button>
 
           {/* Vision Results */}
           {visionResult && (
-            <div className="ai-result-box" style={{ display: 'block', marginTop: '1.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <span style={{ fontWeight: 700, color: 'var(--accent-emerald)' }}>Analysis Complete (94% Confidence)</span>
+            <div className="ai-result-box" style={{ display: 'block', marginTop: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem' }}>
+                <span style={{ fontWeight: 800, color: 'var(--accent-emerald)', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <span>✓</span> Analysis Complete (94% Confidence)
+                </span>
                 <button
                   className="btn btn-sm btn-emerald"
                   onClick={() => setIsReportLostOpen(true)}
                 >
-                  Apply to New Report
+                  Apply to New Report →
                 </button>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <div><strong style={{ color: 'var(--accent-purple)' }}>Suggested Title:</strong> {visionResult.suggestedTitle}</div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem' }}>
+                <div><strong style={{ color: 'var(--accent-primary)' }}>Suggested Title:</strong> {visionResult.suggestedTitle}</div>
                 <div><strong style={{ color: 'var(--accent-cyan)' }}>Category:</strong> {visionResult.category}</div>
                 <div><strong style={{ color: 'var(--accent-cyan)' }}>Brand & Model:</strong> {visionResult.brand} {visionResult.model}</div>
                 <div><strong style={{ color: 'var(--accent-cyan)' }}>Colors:</strong> {visionResult.primaryColor} (Primary), {visionResult.secondaryColor || 'None'}</div>
@@ -169,10 +191,14 @@ export default function AiHubPage() {
         {/* Tool 2: Conversational Report Parser */}
         <div className="ai-panel">
           <div className="ai-panel-header">
-            <div className="ai-panel-icon" style={{ color: 'var(--accent-cyan)' }}>💬</div>
+            <div className="ai-panel-icon" style={{ background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-blue)', border: '1px solid var(--border-color)' }}>
+              💬
+            </div>
             <div>
-              <h3 style={{ fontSize: '1.15rem' }}>Natural Language Report Parser</h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+                Natural Language Report Parser
+              </h3>
+              <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
                 Paste raw messages, lost notices, or spoken transcripts to extract structured entities.
               </p>
             </div>
@@ -190,18 +216,18 @@ export default function AiHubPage() {
           </div>
 
           {/* Sample Prompts */}
-          <div style={{ marginBottom: '1.2rem' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.4rem' }}>
-              Sample scenarios:
+          <div style={{ marginBottom: '1.25rem' }}>
+            <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}>
+              CLICK SAMPLE SCENARIO:
             </span>
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button
                 className="btn btn-sm btn-secondary"
                 onClick={() =>
                   setNlText('I misplaced my navy blue Herschel Little America backpack on the second floor library quiet zone around 3:30pm yesterday. Contains an Apple MacBook Air with a GitHub sticker.')
                 }
               >
-                Lost Backpack at Gym
+                🎒 Lost Backpack at Library
               </button>
               <button
                 className="btn btn-sm btn-secondary"
@@ -209,34 +235,42 @@ export default function AiHubPage() {
                   setNlText('Found a set of silver Toyota car keys with a red carabiner clip near the Student Union dining hall cashier around 12:15pm today.')
                 }
               >
-                Found Car Keys at Union
+                🔑 Found Keys at Student Union
               </button>
             </div>
           </div>
 
-          <button className="btn btn-primary" style={{ width: '100%' }} onClick={handleRunNl} disabled={isNlLoading}>
+          <button
+            className="btn btn-primary"
+            style={{ width: '100%', justifyContent: 'center' }}
+            onClick={handleRunNl}
+            disabled={isNlLoading}
+          >
             <span>✨</span> {isNlLoading ? 'Parsing Entities...' : 'Parse with LLM Client'}
           </button>
 
           {/* NL Results */}
           {nlResult && (
-            <div className="ai-result-box" style={{ display: 'block', marginTop: '1.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <span style={{ fontWeight: 700, color: 'var(--accent-cyan)' }}>Structured Extraction</span>
+            <div className="ai-result-box" style={{ display: 'block', marginTop: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem' }}>
+                <span style={{ fontWeight: 800, color: 'var(--accent-blue)', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <span>✓</span> Structured Extraction
+                </span>
                 <button
                   className="btn btn-sm btn-secondary"
                   onClick={() => setIsReportLostOpen(true)}
                 >
-                  Auto-Fill Form
+                  Auto-Fill Form →
                 </button>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.88rem' }}>
                 <div><strong style={{ color: 'var(--accent-emerald)' }}>Detected Intent:</strong> {nlResult.reportType} REPORT ({Math.round(nlResult.confidenceScore * 100)}% confidence)</div>
                 <div><strong style={{ color: 'var(--accent-cyan)' }}>Title:</strong> {nlResult.title}</div>
                 <div><strong style={{ color: 'var(--accent-cyan)' }}>Category:</strong> {nlResult.category}</div>
                 <div><strong style={{ color: 'var(--accent-cyan)' }}>Location:</strong> {nlResult.locationName}, {nlResult.city}</div>
                 <div><strong style={{ color: 'var(--accent-purple)' }}>Timestamp:</strong> {nlResult.reportedDate} at {nlResult.reportedTime}</div>
-                <div><strong style={{ color: 'var(--accent-amber)' }}>Extracted Attributes:</strong> {JSON.stringify(nlResult.attributes)}</div>
+                <div><strong style={{ color: 'var(--accent-amber)' }}>Extracted Attributes:</strong> <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>{JSON.stringify(nlResult.attributes)}</span></div>
               </div>
             </div>
           )}

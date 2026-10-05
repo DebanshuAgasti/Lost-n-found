@@ -58,9 +58,19 @@ export default function ReportFoundModal() {
     <div className="modal-overlay active" onClick={(e) => e.target === e.currentTarget && setIsReportFoundOpen(false)}>
       <div className="modal-box">
         <div className="modal-header">
-          <h3 style={{ fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span>📦</span> Report Found Item
-          </h3>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+              <span className="hero-pill" style={{ marginBottom: 0, padding: '0.15rem 0.5rem', fontSize: '0.68rem', background: 'rgba(16,185,129,0.1)', color: 'var(--accent-emerald)', borderColor: 'rgba(16,185,129,0.3)' }}>
+                PHYSICAL CUSTODY ENTRY
+              </span>
+              <span className="handwritten-annotation" style={{ fontSize: '0.88rem', color: 'var(--accent-emerald)' }}>
+                safeguarded in campus lockers
+              </span>
+            </div>
+            <h3 style={{ fontSize: '1.4rem', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+              Report Found Item
+            </h3>
+          </div>
           <button className="modal-close" onClick={() => setIsReportFoundOpen(false)}>✕</button>
         </div>
 
@@ -70,7 +80,7 @@ export default function ReportFoundModal() {
             <input
               type="text"
               className="form-control"
-              placeholder="e.g. Dark Titanium Phone Found at Library"
+              placeholder="e.g. Space Gray iPhone 15 Pro Found at 2F Quiet Lounge"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -86,18 +96,18 @@ export default function ReportFoundModal() {
                 onChange={(e) => setCategory(e.target.value)}
                 required
               >
-                <option value="ELECTRONICS">Electronics</option>
-                <option value="WALLET_AND_PURSE">Wallet & Purse</option>
+                <option value="ELECTRONICS">Electronics & Tech</option>
+                <option value="WALLET_AND_PURSE">Wallet & Cards</option>
                 <option value="BAGS_AND_BACKPACKS">Bags & Backpacks</option>
-                <option value="DOCUMENTS_AND_ID">Documents & ID</option>
-                <option value="KEYS">Keys</option>
-                <option value="CLOTHING">Clothing</option>
-                <option value="OTHER">Other</option>
+                <option value="DOCUMENTS_AND_ID">Documents & Student ID</option>
+                <option value="KEYS">Keys & Fobs</option>
+                <option value="CLOTHING">Clothing & Accessories</option>
+                <option value="OTHER">Other Belongings</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Custodian Name *</label>
+              <label className="form-label">Assigned Custodian *</label>
               <input
                 type="text"
                 className="form-control"
@@ -112,7 +122,7 @@ export default function ReportFoundModal() {
             <label className="form-label">Public Description *</label>
             <textarea
               className="form-control"
-              placeholder="Describe the item generally. Avoid revealing secret details needed to verify ownership!"
+              placeholder="Describe the item generally. Avoid revealing confidential details or passcodes needed to verify true ownership!"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
@@ -148,7 +158,7 @@ export default function ReportFoundModal() {
               <input
                 type="text"
                 className="form-control"
-                placeholder="e.g. Study Cubicle #14"
+                placeholder="e.g. Study Cubicle #14, Library 2F"
                 value={locationName}
                 onChange={(e) => setLocationName(e.target.value)}
                 required
@@ -156,11 +166,11 @@ export default function ReportFoundModal() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Secure Storage Location *</label>
+              <label className="form-label">Physical Locker / Shelf ID *</label>
               <input
                 type="text"
                 className="form-control"
-                placeholder="e.g. Safe Box B-4"
+                placeholder="e.g. Locker L-04, Vault Bin #3"
                 value={storageLocation}
                 onChange={(e) => setStorageLocation(e.target.value)}
                 required
@@ -168,16 +178,18 @@ export default function ReportFoundModal() {
             </div>
           </div>
 
-          {/* Secret Question */}
-          <div style={{ background: 'rgba(99,102,241,0.1)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-glow)', marginBottom: '1.25rem' }}>
-            <h4 style={{ fontSize: '0.85rem', color: '#c7d2fe', marginBottom: '0.4rem' }}>🔐 Secret Ownership Challenge Question</h4>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.6rem' }}>
-              Ask a question only the true owner can answer (e.g. lockscreen wallpaper, custom sticker, initials).
+          {/* Secret Ownership Challenge Question */}
+          <div style={{ background: 'var(--bg-elevated)', padding: '1.1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', marginBottom: '1.25rem' }}>
+            <h4 style={{ fontSize: '0.84rem', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--accent-primary)', marginBottom: '0.35rem' }}>
+              🔐 Secret Ownership Challenge Question
+            </h4>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '0.6rem' }}>
+              Pose a specific challenge only the genuine owner can answer (e.g., lockscreen photo description, sticker pattern, engraved initials, or serial digits).
             </p>
             <input
               type="text"
               className="form-control"
-              placeholder="e.g. What sticker is on the back or what initials are inside?"
+              placeholder="e.g. What sticker is affixed to the rear glass or what custom lockscreen is displayed?"
               value={verificationQuestion}
               onChange={(e) => setVerificationQuestion(e.target.value)}
               required
@@ -185,7 +197,7 @@ export default function ReportFoundModal() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Photo Image URL</label>
+            <label className="form-label">Item Photo URL</label>
             <input
               type="url"
               className="form-control"
@@ -204,7 +216,7 @@ export default function ReportFoundModal() {
               Cancel
             </button>
             <button type="submit" className="btn btn-emerald" disabled={isSubmitting}>
-              {isSubmitting ? 'Registering...' : 'Register Found Item'}
+              {isSubmitting ? 'Registering...' : 'Register Found Item →'}
             </button>
           </div>
         </form>

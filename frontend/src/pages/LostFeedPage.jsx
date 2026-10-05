@@ -8,12 +8,12 @@ export default function LostFeedPage() {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
 
   const categories = [
-    { id: 'ALL', label: 'All Categories' },
-    { id: 'ELECTRONICS', label: 'Electronics' },
-    { id: 'WALLET_AND_PURSE', label: 'Wallets' },
-    { id: 'BAGS_AND_BACKPACKS', label: 'Bags' },
-    { id: 'DOCUMENTS_AND_ID', label: 'ID & Keys' },
-    { id: 'OTHER', label: 'Other' }
+    { id: 'ALL', label: 'All Items' },
+    { id: 'ELECTRONICS', label: 'Tech & Gadgets' },
+    { id: 'WALLET_AND_PURSE', label: 'Wallets & Cards' },
+    { id: 'BAGS_AND_BACKPACKS', label: 'Bags & Packs' },
+    { id: 'DOCUMENTS_AND_ID', label: 'IDs & Keys' },
+    { id: 'OTHER', label: 'Other Gear' }
   ];
 
   const filtered = lostItems.filter((item) => {
@@ -30,19 +30,31 @@ export default function LostFeedPage() {
 
   return (
     <section className="view-section active">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      {/* Editorial Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', flexWrap: 'wrap', gap: '1.25rem' }}>
         <div>
-          <h2 style={{ fontSize: '1.8rem', marginBottom: '0.25rem' }}>Lost Items Feed</h2>
-          <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-            Browse active missing items reported by students, faculty, and campus guests.
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.35rem' }}>
+            <span className="hero-pill" style={{ marginBottom: 0 }}>
+              <span>●</span> LIVE MISSING INVENTORY
+            </span>
+            <span className="handwritten-annotation" style={{ fontSize: '1rem', color: 'var(--accent-coral)' }}>
+              help reunite gear with owners
+            </span>
+          </div>
+          <h2 style={{ fontSize: '2.2rem', fontFamily: 'var(--font-heading)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '0.35rem' }}>
+            Lost Items Feed
+          </h2>
+          <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', maxWidth: '640px' }}>
+            Active missing items reported by students, faculty, and campus guests across academic halls, gyms, and transit lines.
           </p>
         </div>
+
         <button className="btn btn-primary" onClick={() => setIsReportLostOpen(true)}>
           <span>+</span> Report Lost Item
         </button>
       </div>
 
-      {/* Filters & Search Bar */}
+      {/* Filter & Search Bar */}
       <div className="filter-bar">
         <div className="search-input-wrapper">
           <span className="search-icon">🔍</span>
@@ -52,27 +64,66 @@ export default function LostFeedPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-        </div>
-        <div className="pill-filters">
-          {categories.map((c) => (
+          {searchQuery && (
             <button
-              key={c.id}
-              className={`filter-pill ${selectedCategory === c.id ? 'active' : ''}`}
-              onClick={() => setSelectedCategory(c.id)}
+              onClick={() => setSearchQuery('')}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                padding: '0.2rem 0.5rem'
+              }}
             >
-              {c.label}
+              ✕
             </button>
-          ))}
+          )}
+        </div>
+
+        <div className="pill-filters">
+          {categories.map((c) => {
+            const count = c.id === 'ALL'
+              ? lostItems.length
+              : lostItems.filter((i) => i.category === c.id).length;
+            return (
+              <button
+                key={c.id}
+                className={`filter-pill ${selectedCategory === c.id ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(c.id)}
+              >
+                {c.label} <span style={{ opacity: 0.65, fontSize: '0.72rem', marginLeft: '0.25rem' }}>{count}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Lost Items Grid */}
       <div className="item-grid">
         {filtered.length === 0 ? (
-          <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '3rem', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🔍</div>
-            <h3 style={{ fontSize: '1.15rem', marginBottom: '0.25rem' }}>No matching lost reports found</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Try changing your search terms or category filter.</p>
+          <div style={{
+            gridColumn: '1/-1',
+            textAlign: 'center',
+            padding: '4rem 2rem',
+            background: 'var(--bg-card)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px dashed var(--border-subtle)',
+            margin: '1rem 0'
+          }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🔍</div>
+            <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-heading)', fontWeight: 700, marginBottom: '0.35rem' }}>
+              Nothing matches your query
+            </h3>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', maxWidth: '420px', margin: '0 auto 1.5rem' }}>
+              No matching lost reports found right now. Either nobody lost anything matching this, or it's hiding under another keyword.
+            </p>
+            <button
+              className="btn btn-secondary"
+              onClick={() => { setSelectedCategory('ALL'); setSearchQuery(''); }}
+            >
+              Reset Filters
+            </button>
           </div>
         ) : (
           filtered.map((item) => (
@@ -88,13 +139,15 @@ export default function LostFeedPage() {
                   <span className="badge-reward">💰 ${item.rewardAmount} Reward</span>
                 ) : null}
               </div>
+
               <div className="item-content">
                 <div className="item-meta-row">
-                  <span>{item.lostDate} {item.lostTime || ''}</span>
+                  <span>{item.lostDate} {item.lostTime ? `· ${item.lostTime}` : ''}</span>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--accent-coral)', fontWeight: 700 }}>
                     #L-{item.id}
                   </span>
                 </div>
+
                 <h3 className="item-title">{item.title}</h3>
                 <p className="item-desc">{item.description}</p>
 
@@ -106,7 +159,7 @@ export default function LostFeedPage() {
                 </div>
 
                 <div className="item-footer">
-                  <div className="location-snippet">
+                  <div className="location-snippet" title={item.locationName}>
                     <span>📍</span>
                     <span>{item.locationName}</span>
                   </div>

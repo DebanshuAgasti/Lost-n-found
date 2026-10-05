@@ -18,10 +18,32 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Top Live Network Strip */}
+      <div className="top-status-bar">
+        <div className="ticker-left">
+          <span className={`status-dot ${isBackendOnline === false ? 'offline' : ''}`}></span>
+          <span>CAMPUS MESH NODE #04</span>
+          <span style={{ color: 'var(--border-strong)' }}>/</span>
+          <span style={{ color: 'var(--text-muted)' }}>LIVE DISPATCH ACTIVE</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <span className="handwritten-annotation" style={{ fontSize: '0.95rem' }}>
+            reunited 14 items this week ⚡
+          </span>
+          <span style={{ color: 'var(--border-strong)' }}>|</span>
+          <span>{isBackendOnline ? 'API :8080 CONNECTED' : 'LOCAL SIMULATOR'}</span>
+        </div>
+      </div>
+
+      {/* Main Sticky Navbar */}
       <header className="navbar">
+        {/* Brand */}
         <Link to="/" className="brand">
           <div className="brand-icon">⚡</div>
-          <span>Lost<span className="text-gradient">Radar</span></span>
+          <span className="brand-name">
+            Lost<span className="radar-tag">Radar</span>
+          </span>
+          <span className="brand-version">v2.4</span>
         </Link>
 
         {/* Real React Router Navigation Tabs */}
@@ -46,41 +68,28 @@ export default function Navbar() {
           </NavLink>
         </nav>
 
-        {/* Nav Actions */}
+        {/* Nav Actions: Persona Switcher & Notifications */}
         <div className="nav-actions">
-          {/* Backend Status */}
-          <div className="auth-persona-pill" title="Backend Status">
-            <span
-              style={{
-                display: 'inline-block',
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                background: isBackendOnline ? '#10b981' : '#f59e0b'
-              }}
-            ></span>
-            <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-              {isBackendOnline ? 'Online (8080)' : 'Offline / Sim'}
-            </span>
-          </div>
-
           {/* Persona Switcher Pill */}
           <div
-            className="auth-persona-pill"
+            className="user-badge"
             onClick={() => {
               setShowPersonaMenu(!showPersonaMenu);
               setShowNotifPopover(false);
             }}
-            title="Click to toggle persona"
+            title="Switch Persona"
           >
             <div className="user-avatar">{initials}</div>
-            <span>{currentUser.fullName}</span>
-            <span style={{ fontSize: '0.65rem', color: '#64748b' }}>▼</span>
+            <div className="user-info">
+              <span className="user-name">{currentUser.fullName}</span>
+              <span className="user-role">{currentUser.role === 'ROLE_ADMIN' ? 'Staff Security' : 'Verified Student'}</span>
+            </div>
+            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginLeft: '0.2rem' }}>▾</span>
           </div>
 
-          {/* Notification Bell */}
+          {/* Notification Button */}
           <button
-            className="notif-btn"
+            className="icon-btn notif-btn"
             onClick={() => {
               setShowNotifPopover(!showNotifPopover);
               setShowPersonaMenu(false);
@@ -88,7 +97,7 @@ export default function Navbar() {
             title="Notifications"
           >
             <span>🔔</span>
-            {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+            {unreadCount > 0 && <span className="icon-badge notif-badge">{unreadCount}</span>}
           </button>
         </div>
       </header>
@@ -98,16 +107,16 @@ export default function Navbar() {
         <div
           style={{
             position: 'fixed',
-            top: '70px',
-            right: '2rem',
-            width: '340px',
-            background: 'var(--bg-secondary)',
-            border: '1px solid var(--border-bright)',
+            top: '80px',
+            right: '1.5rem',
+            width: '360px',
+            background: 'var(--bg-surface-elevated)',
+            border: '1px solid var(--border-default)',
             borderRadius: 'var(--radius-lg)',
-            boxShadow: 'var(--shadow-lg)',
+            boxShadow: 'var(--shadow-popover)',
             zIndex: 150,
-            padding: '1.2rem',
-            backdropFilter: 'blur(16px)'
+            padding: '1.25rem',
+            animation: 'fadeIn 0.15s ease'
           }}
         >
           <div
@@ -115,18 +124,21 @@ export default function Navbar() {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginBottom: '0.8rem',
+              marginBottom: '1rem',
               borderBottom: '1px solid var(--border-subtle)',
-              paddingBottom: '0.5rem'
+              paddingBottom: '0.65rem'
             }}
           >
-            <h4 style={{ fontSize: '0.95rem' }}>Notifications</h4>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: 700 }}>Live Dispatches</h4>
+              <span className="brand-version" style={{ color: 'var(--accent-primary)' }}>{notifications.length}</span>
+            </div>
             <button
               onClick={handleMarkAllRead}
               className="btn btn-sm btn-secondary"
-              style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem' }}
+              style={{ fontSize: '0.72rem', padding: '0.2rem 0.6rem' }}
             >
-              Mark all read
+              Clear unread
             </button>
           </div>
 
@@ -134,25 +146,27 @@ export default function Navbar() {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.65rem',
-              maxHeight: '280px',
+              gap: '0.6rem',
+              maxHeight: '300px',
               overflowY: 'auto'
             }}
           >
             {notifications.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '1.5rem 0', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                No notifications yet
+              <div style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                <span className="handwritten-annotation">All quiet right now. No active alerts.</span>
               </div>
             ) : (
               notifications.map((n) => (
                 <div
                   key={n.id}
                   style={{
-                    background: n.isRead ? 'rgba(255,255,255,0.02)' : 'rgba(99,102,241,0.1)',
-                    border: `1px solid ${n.isRead ? 'var(--border-subtle)' : 'var(--border-glow)'}`,
-                    borderRadius: 'var(--radius-md)',
+                    background: n.isRead ? 'var(--bg-surface)' : 'rgba(212, 249, 51, 0.05)',
+                    border: `1px solid ${n.isRead ? 'var(--border-subtle)' : 'var(--border-strong)'}`,
+                    borderLeft: n.isRead ? '1px solid var(--border-subtle)' : '3px solid var(--accent-primary)',
+                    borderRadius: 'var(--radius-sm)',
                     padding: '0.75rem',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    transition: 'all var(--transition-fast)'
                   }}
                   onClick={() => {
                     setNotifications((prev) =>
@@ -161,13 +175,13 @@ export default function Navbar() {
                     setShowNotifPopover(false);
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-                    <span style={{ fontWeight: 700, fontSize: '0.84rem', color: n.isRead ? 'var(--text-secondary)' : '#c7d2fe' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+                    <span style={{ fontWeight: 700, fontSize: '0.84rem', color: n.isRead ? 'var(--text-secondary)' : 'var(--text-primary)' }}>
                       {n.title}
                     </span>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{n.createdAt}</span>
+                    <span style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{n.createdAt}</span>
                   </div>
-                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>{n.message}</p>
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>{n.message}</p>
                 </div>
               ))
             )}
@@ -180,22 +194,25 @@ export default function Navbar() {
         <div
           style={{
             position: 'fixed',
-            top: '70px',
+            top: '80px',
             right: '7rem',
-            width: '260px',
-            background: 'var(--bg-secondary)',
-            border: '1px solid var(--border-bright)',
+            width: '280px',
+            background: 'var(--bg-surface-elevated)',
+            border: '1px solid var(--border-default)',
             borderRadius: 'var(--radius-lg)',
-            boxShadow: 'var(--shadow-lg)',
+            boxShadow: 'var(--shadow-popover)',
             zIndex: 150,
-            padding: '0.8rem',
-            backdropFilter: 'blur(16px)'
+            padding: '0.85rem',
+            animation: 'fadeIn 0.15s ease'
           }}
         >
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', padding: '0.3rem 0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Switch Persona
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.3rem 0.5rem', marginBottom: '0.4rem' }}>
+            <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Switch Persona
+            </span>
+            <span className="handwritten-annotation" style={{ fontSize: '0.9rem' }}>testing mode</span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', marginTop: '0.4rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
             {MOCK_USERS.map((u) => (
               <div
                 key={u.id}
@@ -204,22 +221,34 @@ export default function Navbar() {
                   setShowPersonaMenu(false);
                 }}
                 style={{
-                  padding: '0.6rem 0.8rem',
-                  borderRadius: 'var(--radius-md)',
+                  padding: '0.65rem 0.8rem',
+                  borderRadius: 'var(--radius-sm)',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.6rem',
-                  transition: '0.15s',
-                  background: u.id === currentUser.id ? 'rgba(99,102,241,0.2)' : 'transparent'
+                  gap: '0.75rem',
+                  transition: 'background var(--transition-fast)',
+                  background: u.id === currentUser.id ? 'var(--bg-surface-active)' : 'transparent',
+                  border: u.id === currentUser.id ? '1px solid var(--border-strong)' : '1px solid transparent'
                 }}
               >
-                <div className="user-avatar" style={{ width: '24px', height: '24px', fontSize: '0.7rem' }}>
+                <div
+                  className="user-avatar"
+                  style={{
+                    width: '28px',
+                    height: '28px',
+                    fontSize: '0.75rem',
+                    background: u.id === currentUser.id ? 'var(--accent-primary)' : 'var(--border-strong)',
+                    color: u.id === currentUser.id ? '#0c0e12' : '#fff'
+                  }}
+                >
                   {u.fullName.split(' ').map((n) => n[0]).join('').toUpperCase()}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>{u.fullName}</div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{u.role}</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)' }}>{u.fullName}</div>
+                  <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+                    {u.role === 'ROLE_ADMIN' ? 'Staff Security Custodian' : 'Student / Finder'}
+                  </div>
                 </div>
               </div>
             ))}

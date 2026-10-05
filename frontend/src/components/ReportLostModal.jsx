@@ -75,9 +75,19 @@ export default function ReportLostModal() {
     <div className="modal-overlay active" onClick={(e) => e.target === e.currentTarget && setIsReportLostOpen(false)}>
       <div className="modal-box">
         <div className="modal-header">
-          <h3 style={{ fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span>🚨</span> Report Lost Item
-          </h3>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+              <span className="hero-pill" style={{ marginBottom: 0, padding: '0.15rem 0.5rem', fontSize: '0.68rem' }}>
+                LOST DISPATCH DOCKET
+              </span>
+              <span className="handwritten-annotation" style={{ fontSize: '0.88rem', color: 'var(--accent-coral)' }}>
+                we'll alert you on match
+              </span>
+            </div>
+            <h3 style={{ fontSize: '1.4rem', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+              Report Lost Item
+            </h3>
+          </div>
           <button className="modal-close" onClick={() => setIsReportLostOpen(false)}>✕</button>
         </div>
 
@@ -103,18 +113,18 @@ export default function ReportLostModal() {
                 onChange={(e) => setCategory(e.target.value)}
                 required
               >
-                <option value="ELECTRONICS">Electronics</option>
-                <option value="WALLET_AND_PURSE">Wallet & Purse</option>
+                <option value="ELECTRONICS">Electronics & Tech</option>
+                <option value="WALLET_AND_PURSE">Wallet & Cards</option>
                 <option value="BAGS_AND_BACKPACKS">Bags & Backpacks</option>
-                <option value="DOCUMENTS_AND_ID">Documents & ID</option>
-                <option value="KEYS">Keys</option>
-                <option value="CLOTHING">Clothing</option>
-                <option value="OTHER">Other</option>
+                <option value="DOCUMENTS_AND_ID">Documents & Student ID</option>
+                <option value="KEYS">Keys & Fobs</option>
+                <option value="CLOTHING">Clothing & Accessories</option>
+                <option value="OTHER">Other Belongings</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Reward Amount ($)</label>
+              <label className="form-label">Reward Offer ($ optional)</label>
               <input
                 type="number"
                 className="form-control"
@@ -131,7 +141,7 @@ export default function ReportLostModal() {
             <label className="form-label">Description *</label>
             <textarea
               className="form-control"
-              placeholder="Describe the item, what was inside, and where it was misplaced..."
+              placeholder="Describe the item, circumstances, where you last had it, and any distinctive traits..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
@@ -163,11 +173,11 @@ export default function ReportLostModal() {
 
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label">Location / Building *</label>
+              <label className="form-label">Location / Campus Building *</label>
               <input
                 type="text"
                 className="form-control"
-                placeholder="e.g. Central Library 2nd Floor"
+                placeholder="e.g. Central Library 2nd Floor Study Desk"
                 value={locationName}
                 onChange={(e) => setLocationName(e.target.value)}
                 required
@@ -187,15 +197,17 @@ export default function ReportLostModal() {
           </div>
 
           {/* Physical Attributes */}
-          <div style={{ background: 'rgba(8,12,21,0.5)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', marginBottom: '1.25rem' }}>
-            <h4 style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '0.75rem' }}>Physical Distinctive Attributes</h4>
+          <div style={{ background: 'var(--bg-elevated)', padding: '1.1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', marginBottom: '1.25rem' }}>
+            <h4 style={{ fontSize: '0.82rem', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+              Physical Distinctive Identifiers (Boosts 6D Accuracy)
+            </h4>
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">Brand</label>
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Apple, Fossil, Sony..."
+                  placeholder="Apple, Sony, Bellroy..."
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
                 />
@@ -206,7 +218,7 @@ export default function ReportLostModal() {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="iPhone 15 Pro, Bifold..."
+                  placeholder="iPhone 15 Pro, WH-1000XM5..."
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                 />
@@ -219,7 +231,7 @@ export default function ReportLostModal() {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Space Gray, Brown, Blue..."
+                  placeholder="Space Gray, Navy, Matte Black..."
                   value={primaryColor}
                   onChange={(e) => setPrimaryColor(e.target.value)}
                 />
@@ -230,7 +242,7 @@ export default function ReportLostModal() {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Stickers, scratches, initials..."
+                  placeholder="Cyberpunk sticker, scratch on corner..."
                   value={distinctiveMarks}
                   onChange={(e) => setDistinctiveMarks(e.target.value)}
                 />
@@ -258,7 +270,7 @@ export default function ReportLostModal() {
               Cancel
             </button>
             <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-              {isSubmitting ? 'Publishing...' : 'Publish Lost Report'}
+              {isSubmitting ? 'Publishing...' : 'Publish Lost Report →'}
             </button>
           </div>
         </form>
