@@ -1,0 +1,4 @@
+"""
+Lost & Found Python AI Inference Service
+"""
+__version__ = "1.0.0"

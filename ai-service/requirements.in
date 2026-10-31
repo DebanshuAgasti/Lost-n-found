@@ -1,0 +1,21 @@
+# Direct runtime dependencies for L&F AI Microservice
+# Note: Install CUDA-enabled PyTorch separately via official PyTorch index (e.g. cu124)
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+pydantic-settings
+python-dotenv
+torch
+torchvision
+transformers
+timm
+pillow
+numpy
+opencv-python-headless
+safetensors
+huggingface-hub
+qdrant-client
+einops
+httpx
+

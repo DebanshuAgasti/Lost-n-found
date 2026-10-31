@@ -1,43 +1,45 @@
-# L&F — Local Project Export
+# L&F Planning & Architectural Blueprints
 
-Export date: 2026-09-12
+This directory contains the authoritative architecture blueprints, design decisions, and planning documents for the **Lost & Found (L&F)** platform.
 
-## What this archive contains
+---
 
-This is a local working archive reconstructed from the L&F project context available in the current ChatGPT session.
+## 1. System Architecture Overview
 
-It includes:
-- project direction and architecture notes
-- database/vector-search discussion
-- ML/image-matching discussion
-- frontend/backend direction
-- a record of the recent project conversations visible in this session
+The system is designed around a modern **4-Tier Modular Microservice / ML Architecture**:
 
-## Important limitation
+1. **React Web Frontend (`frontend/`)**: Modern web UI (React JS) featuring photo upload with interactive, editable AI attribute preview forms (deferred to later phase; backend-first focus).
+2. **Spring Boot Backend (`backend/`)**: Java 21 / Spring Boot 3.3.4 authoritative orchestrator, transactional domain service, and custodial verification state machine.
+3. **Python AI Service (`ai-service/`)**: Dedicated FastAPI microservice running pretrained open-source vision models (CLIP, Florence-2) for attribute extraction, quality checking, and embedding generation.
+4. **Dual Storage Tier**:
+   - **PostgreSQL 16**: Authoritative System of Record for users, reports, claims, locations, and audit logs.
+   - **Qdrant**: Dedicated Rust vector database for sub-10ms Approximate Nearest Neighbor (ANN) search over 512-dim embeddings.
 
-This is NOT a raw export of every historical ChatGPT message in the L&F project. The current session exposes summaries/snippets of recent project conversations rather than their complete transcripts.
+---
 
-For a complete archival copy of every chat, use ChatGPT's official data export and place the exported conversation files under `chats/`. This archive is designed to be the clean, human-readable project layer on top of that raw export.
+## 2. Directory Navigation
 
-## Current project direction
+| File | Description |
+| :--- | :--- |
+| **[architecture/system-overview.md](file:///mnt/01DC03F70F167E10/Codes/project/L&F/planning/architecture/system-overview.md)** | End-to-end system architecture diagram, component roles, and two-stage matching pipeline. |
+| **[database/postgresql-vs-vector-db.md](file:///mnt/01DC03F70F167E10/Codes/project/L&F/planning/database/postgresql-vs-vector-db.md)** | PostgreSQL vs Qdrant responsibilities, write/read synchronization paths, and dual-store design. |
+| **[ml/image-matching.md](file:///mnt/01DC03F70F167E10/Codes/project/L&F/planning/ml/image-matching.md)** | Pretrained models vs custom training analysis, Python AI service API contract, and human-in-the-loop UX. |
+| **[decisions/current-direction.md](file:///mnt/01DC03F70F167E10/Codes/project/L&F/planning/decisions/current-direction.md)** | Summary matrix of approved architectural decisions, tech stacks, and rationale. |
+| **[chats/PROJECT_CONTEXT.md](file:///mnt/01DC03F70F167E10/Codes/project/L&F/planning/chats/PROJECT_CONTEXT.md)** | Historical decision log and chronological evolution of the system design. |
 
-L&F is a Lost & Found platform:
-- Website first, mobile application later.
-- Shared backend/API so web and mobile can use the same core services.
-- Next.js is the current frontend direction.
-- Backend should be developed and tested independently before the frontend.
-- PostgreSQL and vector search have complementary roles.
-- Image matching is intended to help identify likely matches between lost and found item reports.
-- User-entered item characteristics are optional but can improve matching, especially when images are blurry, low-light, or otherwise ambiguous.
-- An open-source model is being considered, with cloud hosting as an option.
+---
 
-## Suggested next engineering phase
+## 3. Engineering Implementation Milestones
 
-1. Define the domain model and PostgreSQL schema.
-2. Define the backend API contract.
-3. Build backend services and automated tests without a frontend.
-4. Add image ingestion and embedding generation.
-5. Add vector similarity search plus structured PostgreSQL filtering.
-6. Build the matching/ranking pipeline.
-7. Build the Next.js web client.
-8. Add a mobile client later against the same backend.
+1. **Phase 1: Python AI Microservice (`ai-service/`)**
+   - Implement FastAPI service with pretrained OpenCLIP / VLM models.
+   - Expose `POST /api/v1/extract` returning category, color, brand, image quality, and 512-dim embedding.
+2. **Phase 2: Qdrant Integration (`backend/`)**
+   - Add Qdrant container to `docker-compose.yml`.
+   - Implement Spring Boot Qdrant client for collection management, upserts, and ANN queries.
+3. **Phase 3: Two-Stage Hybrid Matching Pipeline (`backend/`)**
+   - Replace in-memory full table scans with Stage 1 Qdrant candidate search (top 50).
+   - Pass retrieved candidates to Spring Boot's in-JVM 6-D `MatchingEngine` for precision reranking.
+4. **Phase 4: React Web Frontend (`frontend/` — Deferred)**
+   - Implement React JS web UI for lost & found submission and claim workflows once backend is complete.
+   - Build photo dropzone with editable AI prediction review form.

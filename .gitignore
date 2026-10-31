@@ -51,3 +51,16 @@ yarn-error.log*
 zenith_repo/
 *.log
 *.ps1
+
+### Python / AI Service ###
+ai-service/.venv/
+ai-service/venv/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pt
+*.pth
+*.bin
+*.onnx
+.pytest_cache/

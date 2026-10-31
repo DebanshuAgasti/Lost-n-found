@@ -11,7 +11,7 @@ A production-grade Spring Boot 3 backend for the Lost & Found platform, implemen
    - PostgreSQL schema with table definitions, indexes, foreign keys, and `pgvector` compatibility in [`schema-postgres.sql`](file:///mnt/01DC03F70F167E10/Codes/project/L&F/backend/src/main/resources/schema-postgres.sql).
 
 2. **Multimodal AI & Heuristic Matching Engine**:
-   - **Visual Similarity**: Cosine similarity over normalized 512-dimensional image embeddings ([`VectorSimilarityCalculator`](file:///mnt/01DC03F70F167E10/Codes/project/L&F/backend/src/main/java/com/lostfound/ml/VectorSimilarityCalculator.java)).
+   - **Visual Similarity**: Cosine similarity over normalized 512-dimensional image embeddings 
    - **Attribute & Feature Matching**: Brand, model, primary/secondary colors, and distinctive markings (stickers, scratches, damage, accessories).
    - **Text Similarity**: Jaccard similarity and token overlap across titles, descriptions, and user observations.
    - **Geographic Proximity**: Haversine formula calculation with fallback to city match.

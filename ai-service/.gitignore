@@ -1,0 +1,39 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Model weights and cache
+models/cache/
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+
+# Uploaded user images and runtime artifacts
+uploads/
+*.jpg
+*.jpeg
+*.png
+*.webp
+
+# Logs and temporary files
+*.log
+*.tmp
+
